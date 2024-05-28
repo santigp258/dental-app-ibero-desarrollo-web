@@ -5,6 +5,7 @@ import HttpStatusCode from '@/api/lib/http-status-codes'
 import prisma from '@/api/lib/prisma'
 import { hashPassword } from '@/api/lib/utils'
 import {
+  PatientFormSchemaCreateType,
   UserFormSchemaCreateType,
   UserFormSchemaType,
 } from '@/constants/yup-schemas/prisma.schema'
@@ -52,7 +53,10 @@ export const getUserController = async (
 }
 
 export const getProfilePayloadFromBody = (
-  body: UserFormSchemaType | UserFormSchemaCreateType,
+  body:
+    | UserFormSchemaType
+    | UserFormSchemaCreateType
+    | PatientFormSchemaCreateType,
 ) => {
   return {
     ..._.omit(body, [
@@ -61,6 +65,7 @@ export const getProfilePayloadFromBody = (
       'professionId',
       'password',
       'confirmPassword',
+      'departmentId',
     ]),
     ...(body.municipalityId
       ? {
@@ -80,7 +85,7 @@ export const getProfilePayloadFromBody = (
           },
         }
       : {}),
-  }
+  } as any
 }
 export const updateUserController = async (
   req: ApiRequest<UserFormSchemaType>,
@@ -98,7 +103,7 @@ export const updateUserController = async (
     return error(HttpStatusCode.NOT_FOUND)
   }
 
-  const body = _.omit(req.validated, ['departmentId', 'email'])
+  const body = _.omit(req.validated, ['email'])
 
   const { role, password, confirmPassword } = body
 
@@ -121,7 +126,7 @@ export const updateUserController = async (
 export const createUserController = async (
   req: ApiRequest<UserFormSchemaCreateType>,
 ) => {
-  const body = _.omit(req.validated, ['departmentId'])
+  const body = req.validated
 
   const { role, email, password } = body
 

@@ -9,7 +9,7 @@ import HttpStatusCode from '@/api/lib/http-status-codes'
 const checkCredentialsController = async (req: ApiRequest) => {
   const userService = new UsersService()
 
-  const payload = req.validated as CheckCredentialsSchemaType
+  const payload = req.validated as unknown as CheckCredentialsSchemaType
 
   const user = await userService.getUserByEmail(payload.email)
 

@@ -35,7 +35,7 @@ const BasicInformationForm: FC<BasicInformationFormProps> = ({
 
       <InputGroup className="lg:grid-cols-1 xl:grid-cols-3">
         <InputField name="name" label="Nombre" />
-        <InputField name="email" disabled={!isEnabledEmailField} />
+        <InputField name="email" />
         <InputField name="image" label="Avatar enlace" />
       </InputGroup>
       <InputGroup className="lg:grid-cols-1 xl:grid-cols-2">

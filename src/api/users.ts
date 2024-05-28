@@ -1,4 +1,4 @@
-import { UserType } from '@/types/models'
+import { PatientType, UserType } from '@/types/models'
 import { fetcher } from '@/api/lib/fetcher'
 
 export const getUsers = async (): Promise<UserType[] | null> => {

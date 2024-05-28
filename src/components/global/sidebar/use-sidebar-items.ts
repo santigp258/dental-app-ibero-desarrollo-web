@@ -30,11 +30,6 @@ export const useSidebarItems = () => {
       href: '/',
       icon: HomeIcon,
     },
-    {
-      label: 'Pacientes',
-      icon: Users,
-      href: '/patients',
-    },
     ...([
       user?.role === 'admin'
         ? {
@@ -51,7 +46,12 @@ export const useSidebarItems = () => {
               },
             ],
           }
-        : null,
+        : {
+            label: 'Pacientes',
+            icon: Users,
+            href: '/patients',
+          },
+      ,
     ] as SidebarItem[]),
 
     {

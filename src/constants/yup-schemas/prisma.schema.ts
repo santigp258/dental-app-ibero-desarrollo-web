@@ -1,5 +1,5 @@
 import yup from '@/constants/yup-schemas/yup'
-import { IdentificationType, Gender, MaritalStatus, Role } from '@prisma/client'
+import { Gender, IdentificationType, MaritalStatus, Role } from '@prisma/client'
 import { InferType } from 'yup'
 
 const userSchema = yup.object().shape({
@@ -39,8 +39,19 @@ export const profileSchema = yup.object().shape({
   gender: yup.mixed().oneOf(Object.values(Gender)).nullable(),
   maritalStatus: yup.mixed().oneOf(Object.values(MaritalStatus)).nullable(),
   birthDate: yup.date().nullable(),
-  //municipalityId: yup.number().nullable(),
   professionId: yup.number().nullable(),
+  departmentId: yup.number().nullable(),
+  municipalityId: yup
+    .number()
+    .nullable()
+    .when('departmentId', (values, schema, options) => {
+      if (values[0] !== null) {
+        return schema.required(
+          'Campo municipio es requerido cuando el departamento se especifica',
+        )
+      }
+      return schema
+    }),
 })
 
 export const patientSchema = yup.object().shape({
@@ -85,20 +96,9 @@ const baseUserFormSchema = yup
   .object()
   .shape({
     role: yup.mixed().oneOf(Object.values(Role)).required(),
-    departmentId: yup.number().nullable(),
-    municipalityId: yup
-      .number()
-      .nullable()
-      .when('departmentId', (values, schema, options) => {
-        if (values[0] !== null) {
-          return schema.required(
-            'Campo municipio es requerido cuando el departamento se especifica',
-          )
-        }
-        return schema
-      }),
   })
   .concat(profileSchema)
+
 export const userFormSchema = yup
   .object()
   .shape({})
@@ -111,5 +111,17 @@ export const userFormsSchemaCreate = yup
   .concat(baseUserFormSchema)
   .concat(passwordSchemaRequired)
 
+export const patientFormSchema = yup.object().shape({}).concat(profileSchema)
+
+export const patientFormsSchemaCreate = yup
+  .object()
+  .shape({})
+  .concat(profileSchema)
+
 export type UserFormSchemaType = InferType<typeof userFormSchema>
 export type UserFormSchemaCreateType = InferType<typeof userFormsSchemaCreate>
+
+export type PatientFormSchemaType = InferType<typeof patientFormSchema>
+export type PatientFormSchemaCreateType = InferType<
+  typeof patientFormsSchemaCreate
+>

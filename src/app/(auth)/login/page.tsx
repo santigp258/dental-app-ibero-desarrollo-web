@@ -17,10 +17,10 @@ const Login = () => {
           <Logo />
         </Link>
       </div>
-      <h2 className="mt-20 text-lg font-semibold text-gray-900">
+      <h2 className="text-gray-900 mt-20 text-lg font-semibold">
         Inicia sesión en tu cuenta
       </h2>
-      <p className="mt-2 text-sm text-gray-700">
+      {/*  <p className="mt-2 text-sm text-gray-700">
         ¿No tienes une cuenta?{' '}
         <Link
           href="/register"
@@ -28,7 +28,7 @@ const Login = () => {
         >
           Registrate
         </Link>{' '}
-      </p>
+      </p>*/}
       <LoginForm />
     </AuthLayout>
   )
