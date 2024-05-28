@@ -1,29 +1,26 @@
-## Proyecto Odontológico Web
+# Instalación
 
-Éste es un proyecto realizado con React y Node, para la gestión de un consultorio odontológico!
+## Prerequisitos
+- Node 20.0.0
+- Yarn 4.0.0
+- MariaDB 11.2.2
 
-# Theme (DEPRECATED)
+### 1. Instalar dependencias
 
-### Colores para Modo Claro
-#### Color Primario (Soft Blue)
+```bash
+yarn install
+```
 
-- Fondo: #5B9BD5 (HSL: hsl(211, 58%, 59%))
-- Foreground: #FFFFFF (HSL: hsl(0, 0%, 100%))
+### 2. Copiar .env.example a .env
+Necesitas configurar las variables de entorno definidas en el archivo `.env.example` en un archivo `.env` en la raíz del proyecto.
+En este archivo se configura la conexión a la base de datos y el puerto en el que correrá el servidor, entre otras cosas.
 
-#### Color Secundario (Mint Green)
-- Fondo: #A9D18E (HSL: hsl(88, 38%, 71%))
-- Foreground: #FFFFFF (HSL: hsl(0, 0%, 100%))
+### 3. Correr migraciones
+Como usamos Prisma como ORM, podemos correr nuestras migraciones y seeders de una forma sencilla corriendo el siguiente comando:
+```bash 
+npx prisma migrate dev
+```
+<sub>Si tienes Prisma instalado de forma global puedes correrlo el comando sin usar npx</sub>
 
-
-### Colores para Modo Oscuro
-
-#### Color Primario para Modo Oscuro
-
-- Fondo: #3A5F7D (HSL: hsl(211, 31%, 36%))
-- Foreground: #E6E6E6 (HSL: hsl(0, 0%, 90%))
-
-
-#### Color Secundario para Modo Oscuro
-
-- Fondo: #6B8F67 (HSL: hsl(88, 21%, 45%))
-- Foreground: #E6E6E6 (HSL: hsl(0, 0%, 90%))
+Al correr este comando te pedirá nombrar la migración, puedes nombrarla como "initial_migration", y después de esto, se correrán los seeders, los cuáles añadirán en la base de datos, los recursos iniciales para que la aplicación funciones. Tales como usuarios por defectos, departamentos, municipios, etc.
+Puedes verificar la creación de esto en al archivo [prisma/seed.ts](./prisma/seed.ts)
