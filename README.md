@@ -1,3 +1,7 @@
+## Proyecto Odontológico Web
+
+Éste es un proyecto realizado con React y Node, para la gestión de un consultorio odontológico!
+
 # Theme (DEPRECATED)
 
 ### Colores para Modo Claro
