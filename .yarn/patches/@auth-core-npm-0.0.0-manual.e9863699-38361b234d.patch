@@ -1,0 +1,12 @@
+diff --git a/lib/routes/callback.js b/lib/routes/callback.js
+index 757b8d76105415bff7f7d26e8ae842fe10612b46..24c58c49488ed8843febe96fea09b5d6f7645c48 100644
+--- a/lib/routes/callback.js
++++ b/lib/routes/callback.js
+@@ -276,6 +276,7 @@ export async function callback(params) {
+         logger.debug("callback route error details", { method, query, body });
+         logger.error(error);
+         url.searchParams.set("error", CallbackRouteError.name);
++        url.searchParams.set("error_description", e?.message ?? "");
+         url.pathname += "/error";
+         return { redirect: url.toString(), cookies };
+     }

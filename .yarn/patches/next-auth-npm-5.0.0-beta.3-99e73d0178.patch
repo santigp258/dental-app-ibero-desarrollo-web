@@ -1,0 +1,40 @@
+diff --git a/react.js b/react.js
+index 45583b5e5036f52f6d6e4c4845e4be2d44d1dc73..630e86d3b08dfb321faeb85735e963339c9639e0 100644
+--- a/react.js
++++ b/react.js
+@@ -159,6 +159,7 @@ export async function signIn(provider, options, authorizationParams) {
+         return;
+     }
+     const error = new URL(data.url).searchParams.get("error");
++    const description = new URL(data.url).searchParams.get("error_description")
+     if (res.ok) {
+         await __NEXTAUTH._getSession({ event: "storage" });
+     }
+@@ -167,6 +168,7 @@ export async function signIn(provider, options, authorizationParams) {
+         status: res.status,
+         ok: res.ok,
+         url: error ? null : data.url,
++        description
+     };
+ }
+ /**
+diff --git a/src/react.tsx b/src/react.tsx
+index 8197d5f879c19b829c5e6ddf244a659f7668e53d..1ad096746e2f7e4beeead9c13588d51cb49e6f9f 100644
+--- a/src/react.tsx
++++ b/src/react.tsx
+@@ -279,6 +279,7 @@ export async function signIn<
+   }
+ 
+   const error = new URL(data.url).searchParams.get("error")
++  const description = new URL(data.url).searchParams.get("error_description")
+ 
+   if (res.ok) {
+     await __NEXTAUTH._getSession({ event: "storage" })
+@@ -289,6 +290,7 @@ export async function signIn<
+     status: res.status,
+     ok: res.ok,
+     url: error ? null : data.url,
++    description
+   } as any
+ }
+ 
