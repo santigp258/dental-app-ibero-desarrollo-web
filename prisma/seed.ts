@@ -29,13 +29,13 @@ const userData: Prisma.UserCreateInput[] = [
     },
   },
   {
-    name: 'Beisy Ayala',
-    email: 'beisy@ibero.edu.co',
+    name: 'Mateo Solano',
+    email: 'mateo@ibero.edu.co',
     password: hashPassword('password'),
     role: Role.admin,
     profile: {
       create: {
-        image: 'https://github.com/santigp258.png',
+        image: 'https://github.com/MateoSolano65.png',
       },
     },
   },
