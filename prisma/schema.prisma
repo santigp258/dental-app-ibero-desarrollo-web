@@ -1,0 +1,242 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  user
+  admin
+}
+
+enum Gender {
+  male
+  female
+  non_binary
+  other
+  transgender
+}
+
+enum MaritalStatus {
+  single
+  married
+  divorced
+  widowed
+  separated
+}
+
+enum IdentificationType {
+  cc
+  ti
+  rcn
+  ce
+  pp
+}
+
+// maybe we support social providers, like facebook, twitter, etc. This model is useful for that.
+model Account {
+  id                 Int     @id @default(autoincrement())
+  userId             Int     @map("user_id")
+  type               String
+  provider           String
+  providerAccountId  String  @map("provider_account_id")
+  refresh_token      String? @db.Text
+  access_token       String? @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String? @db.Text
+  session_state      String?
+  oauth_token_secret String? @db.Text
+  oauth_token        String? @db.Text
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId]) // create indexes for optimize queries
+  @@map("accounts")
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  sessionToken String   @unique @map("session_token")
+  expires      DateTime
+  userId       Int      @map("user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId]) // create indexes for optimize queries
+  @@map("sessions")
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  password      String?
+  role          Role      @default(user)
+
+  accounts Account[]
+  sessions Session[]
+
+  dentistAppointments Appointment[] @relation("dentists")
+
+  profile   Profile @relation(fields: [profileid], references: [id], onDelete: Cascade)
+  profileid Int     @unique @map("profile_id")
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "users")
+}
+
+model Profile {
+  id                 Int                 @id @default(autoincrement())
+  name               String?
+  email              String?             @unique
+  image              String?
+  phoneNumber        String?             @map("phone_number")
+  identificationType IdentificationType? @map("identification_type")
+  identification     String?
+  address            String?
+  gender             Gender?
+  maritalStatus      MaritalStatus?      @map("marital_status")
+  birthDate          DateTime?           @map("birth_date")
+  municipality       Municipality?       @relation(fields: [municipalityId], references: [id], onDelete: Cascade)
+  municipalityId     Int?                @map("municipality_id")
+  profession         Profession?         @relation(fields: [professionId], references: [id], onDelete: Cascade)
+  professionId       Int?                @map("profession_id")
+
+  user    User?
+  patient Patient?
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@index([municipalityId, professionId])
+  @@map(name: "profiles")
+}
+
+model Patient {
+  id             Int             @id @default(autoincrement())
+  medicalHistory MedicalHistory?
+
+  profile   Profile @relation(fields: [profileid], references: [id], onDelete: Cascade)
+  profileid Int     @unique @map("profile_id")
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "patients")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @db.Text
+  expires    DateTime
+
+  @@unique([identifier])
+  @@map("verification_tokens")
+}
+
+model MedicalHistory {
+  id        Int     @id @default(autoincrement())
+  patientId Int     @unique @map("user_id")
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  numAfiliation String? @map("num_afiliation")
+
+  createdAt    DateTime      @default(now()) @map(name: "created_at")
+  updatedAt    DateTime      @updatedAt @map(name: "updated_at")
+  Appointments Appointment[]
+
+  @@index([patientId])
+  @@map("medical_histories")
+}
+
+model Appointment {
+  // Consulta
+  id              Int      @id @default(autoincrement())
+  reason          String
+  observations    String
+  forecast        String
+  others          String   @default("")
+  lastDateOfVisit DateTime @default(now()) @map("last_date_of_visit")
+
+  dentist   User @relation(fields: [dentistId], references: [id], onDelete: Cascade, name: "dentists")
+  dentistId Int  @map("dentist_id")
+
+  medicalHistory   MedicalHistory @relation(fields: [medicalHistoryId], references: [id], onDelete: Cascade)
+  medicalHistoryId Int            @map("medical_history_id")
+
+  assessmentTests AssessmentTest[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@index([medicalHistoryId, dentistId])
+  @@map("appointments")
+}
+
+model AssessmentTest {
+  // Examen Valoracion
+  id               Int    @id @default(autoincrement())
+  name             String
+  oralHygiene      Float  @map("oral_hygiene")
+  useOfdentalFloss Float  @map("use_of_dental_floss")
+  useOfToothBrush  Float  @map("use_of_tooth_brush")
+  useOfMouthWash   Float  @map("use_of_mouth_wash")
+
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  appointmentId Int         @map("appointment_id")
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@index([appointmentId])
+  @@map("assessment_tests")
+}
+
+model Municipality {
+  // Municipio
+  id   Int    @id @default(autoincrement())
+  name String
+
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId Int        @map("department_id")
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  profiles Profile[]
+
+  @@index([departmentId])
+  @@map("municipalities")
+}
+
+model Department {
+  // Departamento
+  id             Int            @id @default(autoincrement())
+  name           String
+  municipalities Municipality[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map("departments")
+}
+
+model Profession {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  profiles Profile[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map("professions")
+}
