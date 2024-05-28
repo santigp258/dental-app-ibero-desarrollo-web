@@ -7,10 +7,10 @@ import {
   updatePatientController,
 } from '@/api/controllers/patients/get-patients.controller'
 
-export const GET = auth(middleware([getPatientController as any]) as any)
+export const GET = auth(middleware([getPatientController as any]) as any) as any
 export const PUT = auth(
   middleware([
     withValidation(patientFormSchema),
     updatePatientController as any,
   ]) as any,
-)
+) as any

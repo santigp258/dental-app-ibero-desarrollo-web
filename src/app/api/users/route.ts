@@ -6,11 +6,11 @@ import getUsersController, {
 import withValidation from '@/api/middleware/with-validation'
 import { userFormsSchemaCreate } from '@/constants/yup-schemas/prisma.schema'
 
-export const GET = auth(middleware([getUsersController]) as any)
+export const GET = auth(middleware([getUsersController]) as any) as any
 
 export const POST = auth(
   middleware([
     withValidation(userFormsSchemaCreate),
     createUserController as any,
   ]) as any,
-)
+) as any

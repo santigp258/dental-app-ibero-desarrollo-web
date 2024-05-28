@@ -6,4 +6,4 @@ import { checkCredentialsSchema } from '@/constants/yup-schemas/users.schema'
 export const POST = middleware([
   withValidation(checkCredentialsSchema),
   CheckCredentialsController,
-])
+]) as any

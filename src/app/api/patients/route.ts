@@ -6,11 +6,11 @@ import getPatientsController, {
 import withValidation from '@/api/middleware/with-validation'
 import { patientFormsSchemaCreate } from '@/constants/yup-schemas/prisma.schema'
 
-export const GET = auth(middleware([getPatientsController]) as any)
+export const GET = auth(middleware([getPatientsController]) as any) as any
 
 export const POST = auth(
   middleware([
     withValidation(patientFormsSchemaCreate),
     createPatientController as any,
   ]) as any,
-)
+) as any
