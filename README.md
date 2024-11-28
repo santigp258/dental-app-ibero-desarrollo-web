@@ -1,3 +1,10 @@
+# Los participantes de este proyecto son:
+- Jose Miguel Peña Hincapié (100146917)
+- Jesús Mateo Solano Martínez (100142790)
+- Santiago Guerrero Pulgarín (100141677)
+- Anderson David Zapata Jaramillo (100140662)
+
+
 # Instalación
 
 ## Prerequisitos
