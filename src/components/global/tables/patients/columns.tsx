@@ -4,6 +4,7 @@ import { Button, ButtonGroup } from '@/components/ui'
 import Link from 'next/link'
 import { Edit } from 'lucide-react'
 import * as React from 'react'
+import { formatPhoneNumber } from '@/lib/utils'
 
 export const columns: ColumnDef<any>[] = [
   ...profileColumns,
@@ -11,7 +12,7 @@ export const columns: ColumnDef<any>[] = [
     header: 'Celular',
     cell: ({ row }) => {
       const profile = row.original.profile ?? {}
-      return profile.phoneNumber ?? 'N/A'
+      return formatPhoneNumber(profile.phoneNumber) ?? 'N/A'
     },
   },
   {
