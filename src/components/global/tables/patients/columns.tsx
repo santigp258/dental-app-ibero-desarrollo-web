@@ -8,6 +8,13 @@ import * as React from 'react'
 export const columns: ColumnDef<any>[] = [
   ...profileColumns,
   {
+    header: 'Celular',
+    cell: ({ row }) => {
+      const profile = row.original.profile ?? {}
+      return profile.phoneNumber ?? 'N/A'
+    },
+  },
+  {
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
