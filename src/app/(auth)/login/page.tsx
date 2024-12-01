@@ -18,7 +18,7 @@ const Login = () => {
         </Link>
       </div>
       <h2 className="text-gray-900 mt-20 text-lg font-semibold">
-        Inicia sesión en tu cuenta
+        Welcome To Users
       </h2>
       {/*  <p className="mt-2 text-sm text-gray-700">
         ¿No tienes une cuenta?{' '}
